@@ -93,7 +93,7 @@ const HeaderMiddle = () => {
               {!isAuthenticated && (
                 <li>
                   <Link
-                    to="/login"
+                    to="/signup"
                     onClick={() => setIsShowUserDropDown(false)}
                   >
                     Login/Signup

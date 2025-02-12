@@ -135,3 +135,43 @@ background-color: #f5f1f1;
 ul{
   list-style: none;
 }
+.signup-send-otp{
+  width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+    justify-content: center;
+}
+.signup-send-otp> .inner{
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  border: 1px solid lightgray;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 2px 5px 5px lightgray;
+}
+.signup-send-otp>.inner>form{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.signup-send-otp>.inner>form >input{
+  border: none;
+    border-bottom: 1px solid gray;
+    outline: none;
+    padding: 4px;
+}
+.signup-send-otp>.inner>form >button{
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  color: white;
+  background-color: sandybrown;
+  &:hover{
+    background-color: #873600;
+  }
+}
