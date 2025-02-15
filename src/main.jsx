@@ -1,15 +1,14 @@
 // import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { store } from "./redux/store.js";
+import { Provider } from "react-redux";
 import "./index.css";
-import CustomerApp from "./CustomerApp.jsx";
-import SellerApp from "./SellerApp.jsx";
-import { BrowserRouter } from "react-router";
-const user = { role: "seller" };
+import App from "../App.jsx";
+
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-  <BrowserRouter>
-    {/* {user.role === "customer" ? <CustomerApp /> : <SellerApp />} */}
-    <CustomerApp />
-  </BrowserRouter>
+  <Provider store={store}>
+    <App />
+  </Provider>
   // </StrictMode>
 );
