@@ -2,58 +2,58 @@ import { createSlice } from "@reduxjs/toolkit";
 import { sendOtp, verifyOtp } from "../thunks/authThunk.js";
 import { LOADING } from "../constants.js";
 
-const initialState = {
-  user: null,
-  loading: LOADING.IDLE,
-  error: null,
-  isAuthenticated: false,
-  isOtpSend: false,
-};
-
+// authSlice
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: {
+    data: [],
+    loading: LOADING.IDLE,
+    error: null,
+    isAuthenticated: null,
+  },
   reducers: {
-    clearError: (state) => {
+    clearError: (state, action) => {
       state.error = null;
-    },
-    logout: (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
     },
   },
   extraReducers: (builder) => {
+    // authentication
     builder
-      // 🔹 Send OTP Cases
-      .addCase(sendOtp.pending, (state) => {
+      .addCase(sendOtp.pending, (state, action) => {
+        state.data = [];
         state.loading = LOADING.PENDING;
         state.error = null;
-        state.isOtpSend = false;
+        state.isAuthenticated = false;
       })
-      .addCase(sendOtp.fulfilled, (state) => {
+      .addCase(sendOtp.fulfilled, (state, action) => {
+        state.data = action.payload;
         state.loading = LOADING.SUCCEEDED;
-        state.isOtpSend = true; // OTP sent successfully
         state.error = null;
+        state.isAuthenticated = true;
       })
       .addCase(sendOtp.rejected, (state, action) => {
+        state.data = [];
         state.loading = LOADING.FAILED;
-        state.isOtpSend = false;
         state.error = action.payload;
-      })
+        state.isAuthenticated = false;
+      });
 
-      // 🔹 Verify OTP Cases
-      .addCase(verifyOtp.pending, (state) => {
+    // verify Otp
+    builder
+      .addCase(verifyOtp.pending, (state, action) => {
+        state.data = [];
         state.loading = LOADING.PENDING;
         state.error = null;
+        state.isAuthenticated = false;
       })
       .addCase(verifyOtp.fulfilled, (state, action) => {
+        state.data = action.payload;
         state.loading = LOADING.SUCCEEDED;
-        state.user = action.payload.user;
-        state.isAuthenticated = true;
-        state.otpSent = false; // Reset OTP status
         state.error = null;
+        state.isAuthenticated = true;
       })
       .addCase(verifyOtp.rejected, (state, action) => {
+        state.data = [];
         state.loading = LOADING.FAILED;
         state.error = action.payload;
         state.isAuthenticated = false;
@@ -62,4 +62,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { clearError, logout } = authSlice.actions;
+export const { clearError } = authSlice.actions;

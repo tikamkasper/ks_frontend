@@ -1,46 +1,42 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_BASE_URL } from "../constants.js";
 
-//send Otp
+// Axios Configuration
+const axiosConfig = { withCredentials: true, credentials: "include" };
+
+// 🔹 Send OTP Thunk
 export const sendOtp = createAsyncThunk(
-  "sendOtp",
+  "auth/send_otp",
   async (email_or_mobile, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/register/send/otp",
-        email_or_mobile,
-        { withCredentials: true, credentials: "include" }
+      const { data } = await axios.post(
+        `${API_BASE_URL}/users/register/send_otp`,
+        { email_or_mobile },
+        axiosConfig
       );
-      return response.data;
+      return data;
     } catch (error) {
-      // return custom error message from backend if present
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to send OTP"
+      );
     }
   }
 );
 
-//verify Otp
+// 🔹 Verify OTP Thunk
 export const verifyOtp = createAsyncThunk(
-  "verifyOtp",
-  async (loginInput, { rejectWithValue }) => {
+  "auth/verifyOtp",
+  async ({ email_or_mobile, otp }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users//register/verify/otp",
-        loginInput,
-        { withCredentials: true, credentials: "include" }
+      const { data } = await axios.post(
+        `${API_BASE_URL}/users/register/verify_otp`,
+        { email_or_mobile, otp },
+        axiosConfig
       );
-      return response.data;
+      return data;
     } catch (error) {
-      // return custom error message from backend if present
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue(error.message);
-      }
+      return rejectWithValue(error.response?.data?.message || "Invalid OTP");
     }
   }
 );

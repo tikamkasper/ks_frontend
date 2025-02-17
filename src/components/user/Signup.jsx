@@ -1,39 +1,31 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import styles from "./Signup.module.css"; // Import the CSS Module
 import { sendOtp, verifyOtp } from "../../redux/thunks/authThunk.js";
 import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { status, error, isAuthenticated } = useSelector((state) => state.auth);
-
   const [email_or_mobile, setEmail_or_mobile] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [verificationMessage, setVerificationMessage] = useState("");
   const [otp, setOtp] = useState("");
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
 
-  const [role, setRole] = useState("");
-
-  const handleInputChange = (e) => {
-    setEmail_or_mobile(e.target.value);
-  };
-  const handleRoleChange = (e) => {
-    setRole(e.target.value);
-  };
-  const handleOtpChange = (e) => {
-    setOtp(e.target.value);
-  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
+  useEffect(() => {
+    if (data.success) {
+      setIsOtpSent(true);
+    }
+  }, [data]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!status) {
+    if (!isOtpSent) {
       dispatch(sendOtp(email_or_mobile));
     } else {
-      dispatch(verifyOtp({ email_or_mobile, role, otp }));
+      dispatch(verifyOtp({ email_or_mobile, otp }));
     }
   };
 
@@ -49,54 +41,23 @@ const Signup = () => {
               <input
                 type="text"
                 value={email_or_mobile}
-                onChange={handleInputChange}
+                onChange={(e) => setEmail_or_mobile(e.target.value)}
                 placeholder="Enter Email/Mobile Number"
-                disabled={status}
+                disabled={isOtpSent}
                 required
               />
-              {status && (
+              {isOtpSent && (
                 <button type="button" onClick={() => setIsOtpSent(!isOtpSent)}>
                   Change
                 </button>
               )}
-            </div>
-            <div className={styles.userRole}>
-              <p>Create Account For ?</p>
-              <div className={styles.radios}>
-                <div className="customerRadio">
-                  <input
-                    type="radio"
-                    name="role"
-                    id="customer"
-                    value="customer"
-                    onChange={handleRoleChange}
-                    disabled={isOtpSent}
-                    required
-                  />
-                  &nbsp;&nbsp;
-                  <label htmlFor="customer">Customer</label>
-                </div>
-                <div className="sellerRadio">
-                  <input
-                    type="radio"
-                    name="role"
-                    id="seller"
-                    value="seller"
-                    onChange={handleRoleChange}
-                    disabled={isOtpSent}
-                    required
-                  />
-                  &nbsp;&nbsp;
-                  <label htmlFor="seller">Seller</label>
-                </div>
-              </div>
             </div>
             {isOtpSent && (
               <div className={styles.otpInput}>
                 <input
                   type="text"
                   value={otp}
-                  onChange={handleOtpChange}
+                  onChange={(e) => setOtp(e.target.value)}
                   placeholder="Enter OTP"
                   required
                   maxLength={6}
@@ -114,7 +75,7 @@ const Signup = () => {
           </div>
         </div>
         <div className={styles.verificationMessage}>
-          <p>{verificationMessage}</p>
+          <p>{data.message}</p>
         </div>
       </div>
     </div>

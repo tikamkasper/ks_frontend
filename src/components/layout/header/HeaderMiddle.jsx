@@ -62,6 +62,9 @@ const HeaderMiddle = () => {
             <FaRegHeart />
           </div>
         </div>
+        <div className="sellerLink">
+          <Link to="#"> Become a Seller</Link>
+        </div>
         <div className="hamburger-icon">
           <GiHamburgerMenu />
         </div>

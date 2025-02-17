@@ -18,23 +18,3 @@ function App() {
 }
 
 export default App;
-
-/*
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SendOtp from "./components/auth/SendOtp";
-import VerifyOtp from "./components/auth/VerifyOtp";
-
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/send-otp" element={<SendOtp />} />
-        <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/" element={<h1>Welcome Home</h1>} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
-*/
